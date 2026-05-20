@@ -1,0 +1,209 @@
+/* ===== GOOGLE FONT ===== */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* ===== GLOBAL ===== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* ===== NAVBAR ===== */
+
+.navbar {
+    width: 100%;
+    background: linear-gradient(to right, #0f172a, #1e293b);
+    padding: 18px 60px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+
+
+
+
+
+nav.navbar {
+    background: transparent;
+}
+
+
+
+/* ===== CONTAINER ===== */
+
+.container-fluid {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* ===== LOGO ===== */
+
+.brand-name {
+    font-size: 32px;
+    font-weight: 700;
+    color: white;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.brand-name:hover {
+    color: #38bdf8;
+}
+
+/* ===== MENU ===== */
+
+.menu-listing {
+    display: flex;
+    align-items: center;
+    gap: 35px;
+    list-style: none;
+}
+
+/* ===== MENU ITEMS ===== */
+
+.listing-tital {
+    color: white;
+    font-size: 17px;
+    font-weight: 500;
+    cursor: pointer;
+    position: relative;
+    transition: 0.3s;
+}
+
+.listing-tital:hover {
+    color: #38bdf8;
+}
+
+/* ===== UNDERLINE EFFECT ===== */
+
+.listing-tital::after {
+    content: "";
+    position: absolute;
+    width: 0%;
+    height: 2px;
+    background: #38bdf8;
+    left: 0;
+    bottom: -5px;
+    transition: 0.3s;
+}
+
+.listing-tital:hover::after {
+    width: 100%;
+}
+
+/* ===== DROPDOWN ===== */
+
+.list-btn {
+    position: relative;
+}
+
+/* ===== BUTTON ===== */
+
+.list-btn button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 17px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: 0.3s;
+}
+
+.list-btn button:hover {
+    color: #38bdf8;
+}
+
+/* ===== ICON ===== */
+
+.dropdown-icon {
+    width: 20px;
+    height: 20px;
+}
+
+/* ===== DROPDOWN MENU ===== */
+
+.custom-dropdown {
+    position: absolute;
+    top: 45px;
+    right: 0;
+    width: 220px;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.25);
+    animation: dropdownAnimation 0.3s ease;
+    z-index: 9999;
+
+}
+
+
+.sub-menu {
+    display: grid;
+}
+
+/* ===== ANIMATION ===== */
+
+@keyframes dropdownAnimation {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0px);
+    }
+}
+
+/* ===== DROPDOWN ITEMS ===== */
+
+.dropdown-element {
+    padding: 14px 22px;
+    color: #0f172a;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.dropdown-element:hover {
+    background: #f1f5f9;
+    color: #0284c7;
+    padding-left: 30px;
+}
+
+/* ===== RESPONSIVE ===== */
+
+@media(max-width:768px) {
+
+    .navbar {
+        padding: 15px 20px;
+    }
+
+    .container-fluid {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .menu-listing {
+        gap: 15px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .brand-name {
+        font-size: 25px;
+    }
+
+    .custom-dropdown {
+        width: 180px;
+    }
+}
