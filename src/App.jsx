@@ -9,28 +9,41 @@ import {
 import Navbar from './components/Navbar/navbar.jsx';
 import Hero from './components/Hero/Hero.jsx';
 import Category from './components/Category/Category.jsx';
-import Dresses from './Pages/Dresses.jsx';
-import Jackets from './Pages/Jackets.jsx';
-import Tshirts from './Pages/Tshirts.jsx';
+import Shope from './Pages/Shope/Shope.jsx';
+import Dresses from './Pages/Dresses/Dresses.jsx';
+import Jackets from './Pages/Jackets/Jackets.jsx';
+import Tshirts from './Pages/Tshirts/Tshirts.jsx';
+import Men from './Pages/Men/Men.jsx';
+import Women from './Pages/Women/Women.jsx';
+
 function App() {
 
   return (
     <BrowserRouter>
-      <Category />
+
       <Navbar />
 
       <Routes>
 
-        {/* Home Page */}
-        <Route path="/" element={<Hero />} />
 
-        {/* Dresses Page */}
+        <Route path="/" element={
+          <>
+            <Hero />
+            <Category />
+          </>
+        } />
+
+
+        <Route path="/shope" element={<Shope />} />
         <Route path="/dresses" element={<Dresses />} />
         <Route path="/jackets" element={<Jackets />} />
         <Route path="/tshirts" element={<Tshirts />} />
-      </Routes>
+        <Route path="/men" element={<Men />} />
+        <Route path="/women" element={<Women />} />
 
+      </Routes>
     </BrowserRouter>
+
   )
 }
 

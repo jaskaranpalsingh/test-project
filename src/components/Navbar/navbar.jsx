@@ -15,9 +15,10 @@ function Navbar() {
 
           {/* Menu */}
           <ul className="menu-listing">
-            <li className="listing-tital">Home</li>
-            <li className="listing-tital">Woman</li>
-            <li className="listing-tital">Men</li>
+            <Link to="/" className="listing-tital" style={{ textDecoration: 'none' }}>Home</Link>
+            <Link to="/shope" className="listing-tital" style={{ textDecoration: 'none' }}>Shope</Link>
+            <Link to="/women" className="listing-tital" style={{ textDecoration: 'none' }}>Women</Link>
+            <Link to="/men" className="listing-tital" style={{ textDecoration: 'none' }}>Men</Link>
 
             {/* Dropdown */}
             <li className="list-btn">
