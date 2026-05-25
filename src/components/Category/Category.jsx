@@ -1,4 +1,3 @@
-import React from 'react';
 import './Category.css';
 
 import productVideo from '../../assets/product-video.mp4';
@@ -67,7 +66,7 @@ function Category() {
             <div className="product-info">
               <h4 className="product-title">Creased-effect midi dress</h4>
               <div className="product-price">
-                <span className="current-price">$3200</span>
+                <span className="current-price">₹3200</span>
                 <span className="old-price">₹5700</span>
               </div>
               <div className="product-rating">

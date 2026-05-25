@@ -1,4 +1,3 @@
-import React from "react";
 import "./Hero.css"
 import heroVideo from "../../assets/slider-video-01.mp4";
 

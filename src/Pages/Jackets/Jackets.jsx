@@ -11,7 +11,7 @@ function Jackets() {
         "Men",
         "T-shirts",
         "Tops",
-        "Women"
+        "Women",
     ]
 
     const colors = [

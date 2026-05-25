@@ -1,7 +1,6 @@
 import React from 'react'
-import "./Women.css"
-
-function Women() {
+import './Women.css'
+const Women = () => {
     return (
         <div>Women</div>
     )
