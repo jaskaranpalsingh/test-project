@@ -15,7 +15,8 @@ import Jackets from './Pages/Jackets/Jackets.jsx';
 import Tshirts from './Pages/Tshirts/Tshirts.jsx';
 import Men from './Pages/Men/Men.jsx';
 import Women from './Pages/Women/Women.jsx';
-
+import Banner from './components/Banner/Banner.jsx';
+import Footer from './components/Footer/Footer.jsx';
 function App() {
 
   return (
@@ -30,6 +31,8 @@ function App() {
           <>
             <Hero />
             <Category />
+            <Banner />
+            <Footer />
           </>
         } />
 
@@ -42,6 +45,7 @@ function App() {
         <Route path="/women" element={<Women />} />
 
       </Routes>
+
     </BrowserRouter>
 
   )

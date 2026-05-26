@@ -16,7 +16,7 @@ function Navbar() {
           {/* Menu */}
           <ul className="menu-listing">
             <Link to="/" className="listing-tital" style={{ textDecoration: 'none' }}>Home</Link>
-            <Link to="/shope" className="listing-tital" style={{ textDecoration: 'none' }}>Shope</Link>
+            <Link to="/shope" className="listing-tital" style={{ textDecoration: 'none' }}>Shop</Link>
             <Link to="/women" className="listing-tital" style={{ textDecoration: 'none' }}>Women</Link>
             <Link to="/men" className="listing-tital" style={{ textDecoration: 'none' }}>Men</Link>
 
