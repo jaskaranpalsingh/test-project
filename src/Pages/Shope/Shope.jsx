@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import './Shope.css';
 
 // Import product images
@@ -516,7 +517,9 @@ function Shope() {
                             {filteredProducts.slice(0, itemsPerPage).map(product => (
                                 <div className="product-card" key={product.id}>
                                     <div className="product-image-placeholder">
-                                        <img src={product.image} alt={product.title} className="product-image" />
+                                        <Link to="/product" state={{ product }} style={{ display: 'block', width: '100%', height: '100%' }}>
+                                            <img src={product.image} alt={product.title} className="product-image" />
+                                        </Link>
                                         {product.badge && <span className="product-badge">{product.badge}</span>}
                                         <div className="product-actions">
                                             <button className="action-btn">♡</button>
@@ -525,7 +528,9 @@ function Shope() {
                                         <button className="select-options-btn">SELECT OPTIONS</button>
                                     </div>
                                     <div className="product-info">
-                                        <h4 className="product-title">{product.title}</h4>
+                                        <Link to="/product" state={{ product }} style={{ textDecoration: 'none', color: 'inherit' }}>
+                                            <h4 className="product-title">{product.title}</h4>
+                                        </Link>
                                         <div className="product-price">
                                             {product.priceDisplay ? (
                                                 <span className="current-price">{product.priceDisplay}</span>

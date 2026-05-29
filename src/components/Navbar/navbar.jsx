@@ -1,9 +1,11 @@
 import { useState } from "react";
 import "./navbar.css";
-import { ChevronDownIcon } from "@heroicons/react/24/solid";
+import { ChevronDownIcon, ShoppingCartIcon } from "@heroicons/react/24/solid";
 import { Link } from "react-router-dom";
+import { useCart } from "../../context/CartContext";
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const { totalItems, setIsCartOpen } = useCart();
 
   return (
     <>
@@ -30,21 +32,26 @@ function Navbar() {
               {isOpen && (
                 <div className="custom-dropdown">
                   <ul className="sub-menu">
-                    <Link to="/dresses" className="dropdown-element">
+                    <Link to="/dresses" className="dropdown-element" onClick={() => setIsOpen(false)}>
                       Dresses
                     </Link>
-                    <Link to="/Jackets" className="dropdown-element">
+                    <Link to="/Jackets" className="dropdown-element" onClick={() => setIsOpen(false)}>
                       Jackets
                     </Link>
-                    <Link to="/Tshirts" className="dropdown-element">
+                    <Link to="/Tshirts" className="dropdown-element" onClick={() => setIsOpen(false)}>
                       Tshirts
                     </Link>
-
                   </ul>
                 </div>
               )}
             </li>
           </ul>
+
+          {/* Cart Icon */}
+          <div className="navbar-cart" onClick={() => setIsCartOpen(true)}>
+            <ShoppingCartIcon className="cart-icon" />
+            {totalItems > 0 && <span className="cart-badge">{totalItems}</span>}
+          </div>
 
         </div>
       </nav>

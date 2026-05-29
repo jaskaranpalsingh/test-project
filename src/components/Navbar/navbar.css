@@ -61,7 +61,7 @@ nav.navbar {
 .menu-listing {
     display: flex;
     align-items: center;
-    gap: 35px;
+    gap: 60px;
     list-style: none;
 }
 
@@ -206,4 +206,47 @@ nav.navbar {
     .custom-dropdown {
         width: 180px;
     }
+}
+
+/* ===== CART ICON ===== */
+
+.navbar-cart {
+    position: relative;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.navbar-cart:hover {
+    color: #38bdf8;
+}
+
+.cart-icon {
+    width: 28px;
+    height: 28px;
+    color: white;
+    transition: 0.3s;
+}
+
+.navbar-cart:hover .cart-icon {
+    color: #38bdf8;
+}
+
+.cart-badge {
+    position: absolute;
+    top: -8px;
+    right: -10px;
+    background-color: #ef4444;
+    color: white;
+    font-size: 12px;
+    font-weight: 600;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 2px solid #0f172a;
+    /* matches navbar background to create a cutout effect */
 }

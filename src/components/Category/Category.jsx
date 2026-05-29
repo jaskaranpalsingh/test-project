@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import './Category.css';
 
 import productVideo from '../../assets/product-video.mp4';
@@ -36,11 +37,15 @@ function Category() {
 
           <div className="product-card">
             <div className="product-media">
-              <span className="badge">40%</span>
-              <video src={productVideo} autoPlay loop muted playsInline className="product-video" />
+              <Link to="/product" state={{ product: { title: "Asymmetric tulle midi dress", price: 2600, oldPrice: 5900, rating: 4, reviews: 2, badge: '40%', image: null /* video used here */ } }} style={{ display: 'block', width: '100%', height: '100%' }}>
+                  <span className="badge">40%</span>
+                  <video src={productVideo} autoPlay loop muted playsInline className="product-video" />
+              </Link>
             </div>
             <div className="product-info">
-              <h4 className="product-title">Asymmetric tulle midi dress</h4>
+              <Link to="/product" state={{ product: { title: "Asymmetric tulle midi dress", price: 2600, oldPrice: 5900, rating: 4, reviews: 2 } }} style={{ textDecoration: 'none', color: 'inherit' }}>
+                  <h4 className="product-title">Asymmetric tulle midi dress</h4>
+              </Link>
               <div className="product-price">
                 <span className="current-price">₹2600</span>
                 <span className="old-price">₹5900</span>
@@ -60,11 +65,15 @@ function Category() {
                 <button className="action-btn">♡</button>
                 <button className="action-btn">👁</button>
               </div>
-              <img src={photo2} alt="Creased-effect midi dress" className="product-image" />
+              <Link to="/product" state={{ product: { title: "Creased-effect midi dress", price: 3200, oldPrice: 5700, rating: 4, reviews: 3, image: photo2 } }} style={{ display: 'block', width: '100%', height: '100%' }}>
+                  <img src={photo2} alt="Creased-effect midi dress" className="product-image" />
+              </Link>
               <button className="select-options-btn">SELECT OPTIONS</button>
             </div>
             <div className="product-info">
-              <h4 className="product-title">Creased-effect midi dress</h4>
+              <Link to="/product" state={{ product: { title: "Creased-effect midi dress", price: 3200, oldPrice: 5700, rating: 4, reviews: 3, image: photo2 } }} style={{ textDecoration: 'none', color: 'inherit' }}>
+                  <h4 className="product-title">Creased-effect midi dress</h4>
+              </Link>
               <div className="product-price">
                 <span className="current-price">₹3200</span>
                 <span className="old-price">₹5700</span>
@@ -79,10 +88,14 @@ function Category() {
 
           <div className="product-card">
             <div className="product-media">
-              <img src={photo3} alt="Draped strapless dress" className="product-image" />
+              <Link to="/product" state={{ product: { title: "Draped strapless dress", price: 3800, oldPrice: 4700, rating: 3.33, reviews: 3, image: photo3 } }} style={{ display: 'block', width: '100%', height: '100%' }}>
+                  <img src={photo3} alt="Draped strapless dress" className="product-image" />
+              </Link>
             </div>
             <div className="product-info">
-              <h4 className="product-title">Draped strapless dress</h4>
+              <Link to="/product" state={{ product: { title: "Draped strapless dress", price: 3800, oldPrice: 4700, rating: 3.33, reviews: 3, image: photo3 } }} style={{ textDecoration: 'none', color: 'inherit' }}>
+                  <h4 className="product-title">Draped strapless dress</h4>
+              </Link>
               <div className="product-price">
                 <span className="current-price">₹3800</span>
                 <span className="old-price">₹4700</span>
@@ -98,10 +111,14 @@ function Category() {
           <div className="product-card">
             <div className="product-media">
               <span className="badge">22%</span>
-              <img src={photo4} alt="Floral crepe midi dress" className="product-image" />
+              <Link to="/product" state={{ product: { title: "Floral crepe midi dress", price: 5300, oldPrice: 7800, rating: 4.67, reviews: 2, image: photo4 } }} style={{ display: 'block', width: '100%', height: '100%' }}>
+                  <img src={photo4} alt="Floral crepe midi dress" className="product-image" />
+              </Link>
             </div>
             <div className="product-info">
-              <h4 className="product-title">Floral crepe midi dress</h4>
+              <Link to="/product" state={{ product: { title: "Floral crepe midi dress", price: 5300, oldPrice: 7800, rating: 4.67, reviews: 2, image: photo4 } }} style={{ textDecoration: 'none', color: 'inherit' }}>
+                  <h4 className="product-title">Floral crepe midi dress</h4>
+              </Link>
               <div className="product-price">
                 <span className="current-price">₹5300</span>
                 <span className="old-price">₹7800</span>
