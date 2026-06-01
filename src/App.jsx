@@ -3,11 +3,9 @@ import './App.css';
 import {
   BrowserRouter,
   Routes,
-  Route
+  Route,
+  useLocation
 } from "react-router-dom";
-
-import { useEffect, useState } from "react";
-import axios from "axios";
 
 import { CartProvider } from './context/CartContext.jsx';
 
@@ -24,79 +22,48 @@ import Banner from './components/Banner/Banner.jsx';
 import Footer from './components/Footer/Footer.jsx';
 import Product from './Pages/Product/Product.jsx';
 import CartSidebar from './components/CartSidebar/CartSidebar.jsx';
+import Login from './Pages/Login/Login.jsx';
 
-function App() {
-
-  const [products, setProducts] = useState([]);
-
-  useEffect(() => {
-
-    axios
-      .get("http://localhost:5000/api/products")
-      .then((res) => {
-        console.log(res.data);
-        setProducts(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-
-  }, []);
+function MainContent() {
+  const location = useLocation();
+  const isLoginPage = location.pathname === "/login";
 
   return (
+    <>
+      {!isLoginPage && <Navbar />}
+      {!isLoginPage && <CartSidebar />}
+
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <>
+              <Hero />
+              <Category />
+              <Banner />
+              <Footer />
+            </>
+          }
+        />
+        <Route path="/shope" element={<Shope />} />
+        <Route path="/dresses" element={<Dresses />} />
+        <Route path="/jackets" element={<Jackets />} />
+        <Route path="/tshirts" element={<Tshirts />} />
+        <Route path="/men" element={<Men />} />
+        <Route path="/women" element={<Women />} />
+        <Route path="/product" element={<Product />} />
+        <Route path="/login" element={<Login />} />
+      </Routes>
+    </>
+  );
+}
+
+function App() {
+  return (
     <CartProvider>
-
       <BrowserRouter>
-
-        <Navbar />
-        <CartSidebar />
-
-        <Routes>
-
-          <Route
-            path="/"
-            element={
-              <>
-                <Hero />
-                <Category />
-
-                {/* Backend Data Show */}
-                <div className="backend-products">
-
-                  <h1>Backend Products</h1>
-
-                  {
-                    products.map((item) => (
-                      <div key={item.id}>
-
-                        <h2>{item.name}</h2>
-
-                        <p>₹ {item.price}</p>
-
-                      </div>
-                    ))
-                  }
-
-                </div>
-
-                <Banner />
-                <Footer />
-              </>
-            }
-          />
-
-          <Route path="/shope" element={<Shope />} />
-          <Route path="/dresses" element={<Dresses />} />
-          <Route path="/jackets" element={<Jackets />} />
-          <Route path="/tshirts" element={<Tshirts />} />
-          <Route path="/men" element={<Men />} />
-          <Route path="/women" element={<Women />} />
-          <Route path="/product" element={<Product />} />
-
-        </Routes>
-
+        <MainContent />
       </BrowserRouter>
-
     </CartProvider>
   );
 }

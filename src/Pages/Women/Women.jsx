@@ -1,5 +1,6 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import API from '../../services/api';
 import '../Shope/Shope.css';
 
 // Import product images
@@ -267,14 +268,57 @@ const brandsList = [
 ];
 
 const Women = () => {
-    // ─── Filter & Sort States ───────────────────────────────────────────────
-    const [selectedCategories, setSelectedCategories] = useState(['Women']); // 'Women' is checked by default
+    const [dbProducts, setDbProducts] = useState([]);
+    const [selectedCategories, setSelectedCategories] = useState(['Women']);
     const [priceLimit, setPriceLimit] = useState(130);
     const [selectedColors, setSelectedColors] = useState([]);
     const [selectedSizes, setSelectedSizes] = useState([]);
     const [selectedBrands, setSelectedBrands] = useState([]);
     const [sortBy, setSortBy] = useState('Default sorting');
     const [itemsPerPage, setItemsPerPage] = useState(12);
+
+    useEffect(() => {
+        const loadProducts = async () => {
+            try {
+                const res = await API.get('/products');
+                const womenDbProducts = res.data.filter(p =>
+                    p.category === 'Women' ||
+                    (Array.isArray(p.categories) && p.categories.includes('Women'))
+                );
+                const formattedDb = womenDbProducts.map(p => ({
+                    id: p._id || Math.random().toString(),
+                    title: p.title || p.name,
+                    price: Number(p.price),
+                    rating: p.rating || 4.5,
+                    reviews: p.reviews || 0,
+                    badge: p.badge || '',
+                    image: p.image || 'https://images.unsplash.com/photo-1567401893414-76b7b1e5a7a5?w=500',
+                    categories: Array.isArray(p.categories) ? p.categories : [p.category || 'Women'],
+                    colors: p.colors || ['Black'],
+                    sizes: p.sizes || ['S', 'M'],
+                    brand: p.brand || 'Calvin Klein'
+                }));
+                setDbProducts(formattedDb);
+            } catch (err) {
+                console.error('Failed to load products from API:', err);
+            }
+        };
+        loadProducts();
+    }, []);
+
+    const combinedProducts = useMemo(() => {
+        return [...dbProducts, ...allProducts];
+    }, [dbProducts]);
+
+    const maxPricePossible = useMemo(() => {
+        if (combinedProducts.length === 0) return 130;
+        const prices = combinedProducts.map(p => p.price || 0);
+        return Math.ceil(Math.max(...prices, 130));
+    }, [combinedProducts]);
+
+    useEffect(() => {
+        setPriceLimit(maxPricePossible);
+    }, [maxPricePossible]);
 
     // ─── Sidebar Data ───────────────────────────────────────────────────────
     const categories = ["Dresses", "Jackets", "Men", "T-shirts", "Tops", "Women"];
@@ -306,14 +350,14 @@ const Women = () => {
 
     const handleResetFilters = () => {
         setSelectedCategories(['Women']);
-        setPriceLimit(130);
+        setPriceLimit(maxPricePossible);
         setSelectedColors([]);
         setSelectedSizes([]);
         setSelectedBrands([]);
     };
 
     const filteredProducts = useMemo(() => {
-        let result = allProducts;
+        let result = combinedProducts;
 
         // 1. Category filter
         if (selectedCategories.length > 0) {
@@ -348,7 +392,7 @@ const Women = () => {
         }
 
         return result;
-    }, [selectedCategories, priceLimit, selectedColors, selectedSizes, selectedBrands, sortBy]);
+    }, [combinedProducts, selectedCategories, priceLimit, selectedColors, selectedSizes, selectedBrands, sortBy]);
 
     const renderStars = (rating) => {
         const full = Math.floor(rating);
@@ -362,7 +406,7 @@ const Women = () => {
         selectedColors.length > 0 ||
         selectedSizes.length > 0 ||
         selectedBrands.length > 0 ||
-        priceLimit !== 130;
+        priceLimit !== maxPricePossible;
 
     const currentItemsCount = Math.min(filteredProducts.length, itemsPerPage);
 
@@ -398,8 +442,8 @@ const Women = () => {
                     <div className="price-range-slider" style={{ marginBottom: '15px' }}>
                         <input
                             type="range"
-                            min="10"
-                            max="130"
+                            min="0"
+                            max={maxPricePossible}
                             value={priceLimit}
                             className="range-slider"
                             onChange={(e) => setPriceLimit(Number(e.target.value))}

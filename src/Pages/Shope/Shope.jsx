@@ -1,5 +1,6 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import API from '../../services/api';
 import './Shope.css';
 
 // Import product images
@@ -228,7 +229,7 @@ const brandsList = [
 ];
 
 function Shope() {
-    // ─── Filter & Sort States ───────────────────────────────────────────────
+    const [dbProducts, setDbProducts] = useState([]);
     const [selectedCategories, setSelectedCategories] = useState([]);
     const [priceLimit, setPriceLimit] = useState(150);
     const [selectedColors, setSelectedColors] = useState([]);
@@ -236,6 +237,40 @@ function Shope() {
     const [selectedBrands, setSelectedBrands] = useState([]);
     const [sortBy, setSortBy] = useState('Default sorting');
     const [itemsPerPage, setItemsPerPage] = useState(12);
+
+    useEffect(() => {
+        const loadProducts = async () => {
+            try {
+                const res = await API.get('/products');
+                const formattedDb = res.data.map(p => ({
+                    id: p._id || Math.random().toString(),
+                    title: p.title || p.name,
+                    price: Number(p.price),
+                    rating: p.rating || 4.5,
+                    reviews: p.reviews || 0,
+                    badge: p.badge || '',
+                    image: p.image || 'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=500',
+                    categories: Array.isArray(p.categories) ? p.categories : [p.category || 'Men'],
+                    colors: p.colors || ['Black'],
+                    sizes: p.sizes || ['M'],
+                    brand: p.brand || 'Calvin Klein'
+                }));
+                setDbProducts(formattedDb);
+            } catch (err) {
+                console.error('Failed to load products:', err);
+            }
+        };
+        loadProducts();
+    }, []);
+
+    const combinedProducts = useMemo(() => [...dbProducts, ...allProducts], [dbProducts]);
+
+    const maxPricePossible = useMemo(() => {
+        if (combinedProducts.length === 0) return 150;
+        return Math.ceil(Math.max(...combinedProducts.map(p => p.price || 0), 150));
+    }, [combinedProducts]);
+
+    useEffect(() => { setPriceLimit(maxPricePossible); }, [maxPricePossible]);
 
     // ─── Sidebar Data ───────────────────────────────────────────────────────
     const categories = ["Dresses", "Jackets", "Men", "T-shirts", "Tops", "Women"];
@@ -267,14 +302,14 @@ function Shope() {
 
     const handleResetFilters = () => {
         setSelectedCategories([]);
-        setPriceLimit(150);
+        setPriceLimit(maxPricePossible);
         setSelectedColors([]);
         setSelectedSizes([]);
         setSelectedBrands([]);
     };
 
     const filteredProducts = useMemo(() => {
-        let result = allProducts;
+        let result = combinedProducts;
 
         // 1. Category filter
         if (selectedCategories.length > 0) {
@@ -309,7 +344,7 @@ function Shope() {
         }
 
         return result;
-    }, [selectedCategories, priceLimit, selectedColors, selectedSizes, selectedBrands, sortBy]);
+    }, [combinedProducts, selectedCategories, priceLimit, selectedColors, selectedSizes, selectedBrands, sortBy]);
 
     const renderStars = (rating) => {
         const full = Math.floor(rating);
@@ -323,7 +358,7 @@ function Shope() {
         selectedColors.length > 0 ||
         selectedSizes.length > 0 ||
         selectedBrands.length > 0 ||
-        priceLimit !== 150;
+        priceLimit !== maxPricePossible;
 
     return (
         <div className="shope-page">
@@ -365,7 +400,7 @@ function Shope() {
                         <input
                             type="range"
                             min="0"
-                            max="150"
+                            max={maxPricePossible}
                             value={priceLimit}
                             className="range-slider"
                             onChange={(e) => setPriceLimit(Number(e.target.value))}

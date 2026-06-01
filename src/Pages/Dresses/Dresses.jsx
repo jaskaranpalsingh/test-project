@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
+import API from '../../services/api';
 import './Dresses.css';
 
 // Import images
@@ -52,7 +53,33 @@ const dressProducts = [
 ];
 
 function Dresses() {
-    const [price, setPrice] = useState(2500)
+    const [dbProducts, setDbProducts] = useState([]);
+    const [price, setPrice] = useState(100);
+
+    useEffect(() => {
+        const load = async () => {
+            try {
+                const res = await API.get('/products');
+                const filtered = res.data.filter(p =>
+                    p.category === 'Dresses' ||
+                    (Array.isArray(p.categories) && p.categories.includes('Dresses'))
+                );
+                setDbProducts(filtered.map(p => ({
+                    id: p._id,
+                    title: p.title || p.name,
+                    price: Number(p.price),
+                    oldPrice: null,
+                    rating: p.rating || 4.5,
+                    reviews: p.reviews || 0,
+                    badge: '',
+                    image: p.image || 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=500',
+                })));
+            } catch (err) { console.error(err); }
+        };
+        load();
+    }, []);
+
+    const combinedProducts = useMemo(() => [...dbProducts, ...dressProducts], [dbProducts]);
 
     const categories = [
         "Dresses",
@@ -256,7 +283,7 @@ function Dresses() {
                 {/* Main Content */}
                 <div className="dresses-main">
                     <div className="product-grid-4">
-                        {dressProducts.map(product => (
+                        {combinedProducts.map(product => (
                             <div className="product-card" key={product.id}>
                                 <div className="product-image-placeholder">
                                     <Link to="/product" state={{ product }} style={{ display: 'block', width: '100%', height: '100%' }}>

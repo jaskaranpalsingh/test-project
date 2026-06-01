@@ -1,5 +1,6 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import API from '../../services/api';
 import '../Shope/Shope.css';
 
 // Import product images (using available assets)
@@ -29,7 +30,7 @@ const allProducts = [
         id: 2,
         title: 'Bermuda jogging shorts',
         price: 12.66,
-        priceDisplay: '$24.40 – $12.66',
+        priceDisplay: '$44.40 – $12.66',
         rating: 4.00,
         reviews: 6,
         badge: '',
@@ -43,7 +44,7 @@ const allProducts = [
         id: 3,
         title: 'Cargo jogger trousers',
         price: 49.99,
-        priceDisplay: '$59.33 – $49.99',
+        priceDisplay: '$50.33 – $49.99',
         rating: 4.33,
         reviews: 3,
         badge: '',
@@ -181,7 +182,7 @@ const brandsList = [
 ];
 
 function Men() {
-    // ─── Filter & Sort States ───────────────────────────────────────────────
+    const [dbProducts, setDbProducts] = useState([]);
     const [selectedCategories, setSelectedCategories] = useState(['Men']); // 'Men' is checked by default based on screenshot
     const [priceLimit, setPriceLimit] = useState(60);
     const [selectedColors, setSelectedColors] = useState([]);
@@ -189,6 +190,52 @@ function Men() {
     const [selectedBrands, setSelectedBrands] = useState([]);
     const [sortBy, setSortBy] = useState('Default sorting');
     const [itemsPerPage, setItemsPerPage] = useState(12);
+
+    useEffect(() => {
+        const loadProducts = async () => {
+            try {
+                const res = await API.get('/products');
+                console.log("Men.jsx: All products fetched:", res.data);
+                const menDbProducts = res.data.filter(p => 
+                    p.category === 'Men' || 
+                    (Array.isArray(p.categories) && p.categories.includes('Men'))
+                );
+                console.log("Men.jsx: Filtered Men DB products:", menDbProducts);
+                const formattedDb = menDbProducts.map(p => ({
+                    id: p._id || Math.random().toString(),
+                    title: p.title || p.name,
+                    price: Number(p.price),
+                    rating: p.rating || 4.5,
+                    reviews: p.reviews || 0,
+                    badge: p.badge || '',
+                    image: p.image || 'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=500',
+                    categories: Array.isArray(p.categories) ? p.categories : [p.category || 'Men'],
+                    colors: p.colors || ['Black'],
+                    sizes: p.sizes || ['M', 'L'],
+                    brand: p.brand || 'Calvin Klein'
+                }));
+                console.log("Men.jsx: Formatted DB products:", formattedDb);
+                setDbProducts(formattedDb);
+            } catch (err) {
+                console.error("Failed to load products from API:", err);
+            }
+        };
+        loadProducts();
+    }, []);
+
+    const combinedProducts = useMemo(() => {
+        return [...dbProducts, ...allProducts];
+    }, [dbProducts]);
+
+    const maxPricePossible = useMemo(() => {
+        if (combinedProducts.length === 0) return 60;
+        const prices = combinedProducts.map(p => p.price || 0);
+        return Math.ceil(Math.max(...prices, 60));
+    }, [combinedProducts]);
+
+    useEffect(() => {
+        setPriceLimit(maxPricePossible);
+    }, [maxPricePossible]);
 
     // ─── Sidebar Data ───────────────────────────────────────────────────────
     const categories = ["Dresses", "Jackets", "Men", "T-shirts", "Tops", "Women"];
@@ -220,14 +267,14 @@ function Men() {
 
     const handleResetFilters = () => {
         setSelectedCategories(['Men']);
-        setPriceLimit(60);
+        setPriceLimit(maxPricePossible);
         setSelectedColors([]);
         setSelectedSizes([]);
         setSelectedBrands([]);
     };
 
     const filteredProducts = useMemo(() => {
-        let result = allProducts;
+        let result = combinedProducts;
 
         // 1. Category filter
         if (selectedCategories.length > 0) {
@@ -262,7 +309,7 @@ function Men() {
         }
 
         return result;
-    }, [selectedCategories, priceLimit, selectedColors, selectedSizes, selectedBrands, sortBy]);
+    }, [combinedProducts, selectedCategories, priceLimit, selectedColors, selectedSizes, selectedBrands, sortBy]);
 
     const renderStars = (rating) => {
         const full = Math.floor(rating);
@@ -276,7 +323,7 @@ function Men() {
         selectedColors.length > 0 ||
         selectedSizes.length > 0 ||
         selectedBrands.length > 0 ||
-        priceLimit !== 60;
+        priceLimit !== maxPricePossible;
 
     return (
         <div className="shope-page">
@@ -311,7 +358,7 @@ function Men() {
                         <input
                             type="range"
                             min="0"
-                            max="60"
+                            max={maxPricePossible}
                             value={priceLimit}
                             className="range-slider"
                             onChange={(e) => setPriceLimit(Number(e.target.value))}
@@ -322,7 +369,7 @@ function Men() {
                         <span className="price-separator">-</span>
                         <input type="text" value={priceLimit} readOnly className="price-input" style={{ width: '80px' }} />
                     </div>
-                    
+
                     <div className="price-footer">
                         <span>Price: $0 — ${priceLimit}</span>
                         <button className="filter-btn">FILTER</button>
@@ -335,13 +382,13 @@ function Men() {
                     {colorsList.map((item, index) => (
                         <div className="filter-item" key={index}>
                             <div className="filter-left">
-                                <div 
+                                <div
                                     className={`color-dot-wrapper ${selectedColors.includes(item.name) ? 'active' : ''}`}
                                     onClick={() => handleColorToggle(item.name)}
                                 >
                                     <div className="color-dot" style={{ backgroundColor: item.color }}></div>
                                 </div>
-                                <span 
+                                <span
                                     className="filter-name"
                                     onClick={() => handleColorToggle(item.name)}
                                     style={{
@@ -363,15 +410,15 @@ function Men() {
                     {sizesList.map((item, index) => (
                         <div className="filter-item" key={index}>
                             <div className="filter-left">
-                                <input 
-                                    type="checkbox" 
-                                    id={`size-${item.size}`} 
+                                <input
+                                    type="checkbox"
+                                    id={`size-${item.size}`}
                                     className="custom-checkbox"
                                     checked={selectedSizes.includes(item.size)}
                                     onChange={() => handleSizeToggle(item.size)}
                                 />
-                                <label 
-                                    htmlFor={`size-${item.size}`} 
+                                <label
+                                    htmlFor={`size-${item.size}`}
                                     className="filter-name"
                                     style={{
                                         fontWeight: selectedSizes.includes(item.size) ? '600' : '400',
@@ -392,15 +439,15 @@ function Men() {
                     {brandsList.map((item, index) => (
                         <div className="filter-item" key={index}>
                             <div className="filter-left">
-                                <input 
-                                    type="checkbox" 
+                                <input
+                                    type="checkbox"
                                     id={`brand-${item.name}`}
-                                    className="custom-checkbox" 
+                                    className="custom-checkbox"
                                     checked={selectedBrands.includes(item.name)}
                                     onChange={() => handleBrandChange(item.name)}
                                 />
-                                <label 
-                                    htmlFor={`brand-${item.name}`} 
+                                <label
+                                    htmlFor={`brand-${item.name}`}
                                     className="filter-name"
                                     style={{
                                         fontWeight: selectedBrands.includes(item.name) ? '600' : '400',
@@ -435,7 +482,7 @@ function Men() {
                                 <span>⊞</span>
                                 <span>≡</span>
                             </div>
-                            <select 
+                            <select
                                 className="sort-select"
                                 value={sortBy}
                                 onChange={(e) => setSortBy(e.target.value)}
@@ -445,7 +492,7 @@ function Men() {
                                 <option>Sort by price: high to low</option>
                                 <option>Sort by rating</option>
                             </select>
-                            <select 
+                            <select
                                 className="items-select"
                                 value={itemsPerPage}
                                 onChange={(e) => setItemsPerPage(Number(e.target.value))}
