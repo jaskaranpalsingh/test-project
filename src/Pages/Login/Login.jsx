@@ -107,12 +107,10 @@ function Login() {
             <div className="back-to-store-wrapper">
               <Link to="/" className="back-to-store-link">← Back to Store</Link>
             </div>
-
             <div className="brand-logo-container">
               <h2 className="brand-login-title">NURFIA</h2>
               <p className="brand-login-subtitle">Active Session</p>
             </div>
-
             <div className="user-profile-summary">
               <div className="profile-avatar-circle">
                 {userInfo.name.split(" ").map((n) => n[0]).join("").toUpperCase()}
@@ -123,7 +121,6 @@ function Login() {
                 <span className="profile-summary-badge">Administrator</span>
               )}
             </div>
-
             <div className="logged-in-actions">
               <button className="auth-submit-btn" onClick={() => navigate("/")}>
                 Continue Shopping
@@ -220,6 +217,15 @@ function Login() {
                 {showPassword ? "👁️" : "👁️‍🗨️"}
               </button>
             </div>
+
+            {/* Forgot Password Link */}
+            {isLogin && (
+              <div className="forgot-password-wrapper">
+                <Link to="/forgot-password" className="forgot-password-link">
+                  Forgot Password?
+                </Link>
+              </div>
+            )}
 
             {!isLogin && (
               <div className="form-input-group">

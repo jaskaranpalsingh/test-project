@@ -169,8 +169,8 @@
   background: transparent;
 }
 
-.form-input-group input:focus ~ label,
-.form-input-group input:not(:placeholder-shown) ~ label {
+.form-input-group input:focus~label,
+.form-input-group input:not(:placeholder-shown)~label {
   top: 0;
   font-size: 11px;
   color: #0f172a;
@@ -245,7 +245,9 @@
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* ── Switch hint ──────────────────────────── */
@@ -352,4 +354,23 @@
 .auth-logout-btn:hover {
   background: #fef2f2;
   border-color: #f87171;
+}
+
+/* ── Forgot Password ──────────────────────── */
+.forgot-password-wrapper {
+  text-align: right;
+  margin-top: -10px;
+}
+
+.forgot-password-link {
+  font-size: 13px;
+  color: #64748b;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.forgot-password-link:hover {
+  color: #0f172a;
+  text-decoration: underline;
 }

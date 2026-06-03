@@ -23,15 +23,21 @@ import Footer from './components/Footer/Footer.jsx';
 import Product from './Pages/Product/Product.jsx';
 import CartSidebar from './components/CartSidebar/CartSidebar.jsx';
 import Login from './Pages/Login/Login.jsx';
+import ForgotPassword from './Pages/ForgotPassword/ForgotPassword.jsx';
+import ResetPassword from './Pages/ResetPassword/ResetPassword.jsx';
 
 function MainContent() {
   const location = useLocation();
   const isLoginPage = location.pathname === "/login";
+  const isForgotPage = location.pathname === "/forgot-password";
+  const isResetPage = location.pathname.startsWith("/reset-password");
+
+  const hideNav = isLoginPage || isForgotPage || isResetPage;
 
   return (
     <>
-      {!isLoginPage && <Navbar />}
-      {!isLoginPage && <CartSidebar />}
+      {!hideNav && <Navbar />}
+      {!hideNav && <CartSidebar />}
 
       <Routes>
         <Route
@@ -53,6 +59,8 @@ function MainContent() {
         <Route path="/women" element={<Women />} />
         <Route path="/product" element={<Product />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
       </Routes>
     </>
   );
