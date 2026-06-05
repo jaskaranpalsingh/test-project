@@ -31,12 +31,16 @@ export function CartProvider({ children }) {
         );
     };
 
+    const clearCart = () => {
+        setCartItems([]);
+    };
+
     const totalItems = cartItems.reduce((sum, i) => sum + i.qty, 0);
     const subtotal = cartItems.reduce((sum, i) => sum + i.price * i.qty, 0);
 
     return (
         <CartContext.Provider value={{
-            cartItems, addToCart, removeFromCart, updateQty,
+            cartItems, addToCart, removeFromCart, updateQty, clearCart,
             isCartOpen, setIsCartOpen, totalItems, subtotal
         }}>
             {children}

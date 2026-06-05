@@ -8,7 +8,7 @@ const FREE_SHIPPING_THRESHOLD = 500;
 
 function Checkout() {
     const navigate = useNavigate();
-    const { cartItems, subtotal, } = useCart();
+    const { cartItems, subtotal, clearCart } = useCart();
 
     const userInfo = localStorage.getItem("userInfo")
         ? JSON.parse(localStorage.getItem("userInfo"))
@@ -71,6 +71,7 @@ function Checkout() {
             };
 
             const res = await API.post("/orders", orderData, config);
+            clearCart();
             navigate(`/order-confirmation/${res.data._id}`);
 
         } catch (err) {

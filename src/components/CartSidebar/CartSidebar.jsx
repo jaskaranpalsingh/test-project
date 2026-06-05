@@ -1,9 +1,11 @@
+import { useNavigate } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
 import './CartSidebar.css';
 
 const FREE_SHIPPING_THRESHOLD = 500;
 
 function CartSidebar() {
+    const navigate = useNavigate();
     const { cartItems, removeFromCart, isCartOpen, setIsCartOpen, subtotal } = useCart();
 
     const remaining = Math.max(0, FREE_SHIPPING_THRESHOLD - subtotal);
@@ -83,8 +85,24 @@ function CartSidebar() {
                             <span className="subtotal-value">${subtotal.toFixed(2)}</span>
                         </div>
                         <div className="cart-actions">
-                            <button className="view-cart-btn">VIEW CART</button>
-                            <button className="checkout-btn">CHECKOUT</button>
+                            <button
+                                className="view-cart-btn"
+                                onClick={() => {
+                                    setIsCartOpen(false);
+                                    navigate("/checkout");
+                                }}
+                            >
+                                VIEW CART
+                            </button>
+                            <button
+                                className="checkout-btn"
+                                onClick={() => {
+                                    setIsCartOpen(false);
+                                    navigate("/checkout");
+                                }}
+                            >
+                                CHECKOUT
+                            </button>
                         </div>
                     </div>
                 )}

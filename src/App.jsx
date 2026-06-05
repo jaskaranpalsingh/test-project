@@ -25,6 +25,8 @@ import CartSidebar from './components/CartSidebar/CartSidebar.jsx';
 import Login from './Pages/Login/Login.jsx';
 import ForgotPassword from './Pages/ForgotPassword/ForgotPassword.jsx';
 import ResetPassword from './Pages/ResetPassword/ResetPassword.jsx';
+import Checkout from './Pages/Checkout/Checkout.jsx';
+import OrderConfirmation from './Pages/OrderConfirmation/OrderConfirmation.jsx';
 
 function MainContent() {
   const location = useLocation();
@@ -60,7 +62,9 @@ function MainContent() {
         <Route path="/product" element={<Product />} />
         <Route path="/login" element={<Login />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/reset-password/:token" element={<ResetPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/checkout" element={<Checkout />} />
+        <Route path="/order-confirmation/:id" element={<OrderConfirmation />} />
       </Routes>
     </>
   );

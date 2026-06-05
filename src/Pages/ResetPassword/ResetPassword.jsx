@@ -1,13 +1,20 @@
 import { useState } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import API from "../../services/api";
 import "./ResetPassword.css";
 
 function ResetPassword() {
-    const { token } = useParams();
     const navigate = useNavigate();
+    const location = useLocation();
 
-    const [formData, setFormData] = useState({ password: "", confirmPassword: "" });
+    const email = location.state?.email;
+
+    const [formData, setFormData] = useState({
+        otp: "",
+        newPassword: "",
+        confirmPassword: "",
+    });
+
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
     const [loading, setLoading] = useState(false);
@@ -22,21 +29,38 @@ function ResetPassword() {
         e.preventDefault();
         setError("");
 
-        if (formData.password !== formData.confirmPassword) {
+        if (!formData.otp || !formData.newPassword || !formData.confirmPassword) {
+            return setError("Please fill in all fields.");
+        }
+
+        if (formData.newPassword !== formData.confirmPassword) {
             return setError("Passwords do not match.");
         }
-        if (formData.password.length < 6) {
+
+        if (formData.newPassword.length < 6) {
             return setError("Password must be at least 6 characters.");
+        }
+
+        if (formData.otp.length !== 6 || isNaN(formData.otp)) {
+            return setError("OTP must be 6 digits.");
         }
 
         setLoading(true);
 
         try {
-            await API.post(`/auth/reset-password/${token}`, { password: formData.password });
+            await API.post("/auth/verify-otp", {
+                email,
+                otp: formData.otp,
+                newPassword: formData.newPassword,
+            });
+
             setSuccess("Password reset successful!");
             setTimeout(() => navigate("/login"), 2000);
         } catch (err) {
-            setError(err.response?.data?.message || "Invalid or expired link. Please try again.");
+            setError(
+                err.response?.data?.message ||
+                "Invalid OTP or error occurred."
+            );
         } finally {
             setLoading(false);
         }
@@ -48,35 +72,67 @@ function ResetPassword() {
                 <div className="login-card-body">
 
                     <div className="back-to-store-wrapper">
-                        <Link to="/login" className="back-to-store-link">← Back to Sign In</Link>
+                        <Link to="/login" className="back-to-store-link">
+                            ← Back to Sign In
+                        </Link>
                     </div>
 
                     <div className="brand-logo-container">
                         <h2 className="brand-login-title">NURFIA</h2>
-                        <p className="brand-login-subtitle">Choose a new password</p>
+                        <p className="brand-login-subtitle">
+                            Verify OTP & Reset Password
+                        </p>
                     </div>
 
-                    {error && <div className="alert-box alert-error">{error}</div>}
-                    {success && <div className="alert-box alert-success">{success}</div>}
+                    {error && (
+                        <div className="alert-box alert-error">
+                            {error}
+                        </div>
+                    )}
+
+                    {success && (
+                        <div className="alert-box alert-success">
+                            {success}
+                        </div>
+                    )}
 
                     {!success && (
-                        <form onSubmit={handleSubmit} className="auth-form">
+                        <form onSubmit={handleSubmit} className="auth-form" noValidate>
+
+                            <div className="form-input-group">
+                                <input
+                                    type="text"
+                                    name="otp"
+                                    id="reset-otp"
+                                    value={formData.otp}
+                                    onChange={handleChange}
+                                    placeholder=" "
+                                    maxLength="6"
+                                />
+                                <label htmlFor="reset-otp">
+                                    Enter OTP (6 digits)
+                                </label>
+                            </div>
 
                             <div className="form-input-group password-group">
                                 <input
                                     type={showPassword ? "text" : "password"}
-                                    name="password"
+                                    name="newPassword"
                                     id="reset-password"
-                                    value={formData.password}
+                                    value={formData.newPassword}
                                     onChange={handleChange}
                                     placeholder=" "
-                                    required
                                 />
-                                <label htmlFor="reset-password">New Password</label>
+                                <label htmlFor="reset-password">
+                                    New Password
+                                </label>
+
                                 <button
                                     type="button"
                                     className="pwd-toggle-btn"
-                                    onClick={() => setShowPassword(!showPassword)}
+                                    onClick={() =>
+                                        setShowPassword(!showPassword)
+                                    }
                                 >
                                     {showPassword ? "👁️" : "👁️‍🗨️"}
                                 </button>
@@ -90,18 +146,26 @@ function ResetPassword() {
                                     value={formData.confirmPassword}
                                     onChange={handleChange}
                                     placeholder=" "
-                                    required
                                 />
-                                <label htmlFor="reset-confirmPassword">Confirm New Password</label>
+                                <label htmlFor="reset-confirmPassword">
+                                    Confirm New Password
+                                </label>
                             </div>
 
-                            <button type="submit" className="auth-submit-btn" disabled={loading}>
-                                {loading ? <span className="spinner-loader"></span> : "Reset Password"}
+                            <button
+                                type="submit"
+                                className="auth-submit-btn"
+                                disabled={loading}
+                            >
+                                {loading ? (
+                                    <span className="spinner-loader"></span>
+                                ) : (
+                                    "Reset Password"
+                                )}
                             </button>
 
                         </form>
                     )}
-
                 </div>
             </div>
         </div>
