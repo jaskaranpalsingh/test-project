@@ -27,6 +27,7 @@ import ForgotPassword from './Pages/ForgotPassword/ForgotPassword.jsx';
 import ResetPassword from './Pages/ResetPassword/ResetPassword.jsx';
 import Checkout from './Pages/Checkout/Checkout.jsx';
 import OrderConfirmation from './Pages/OrderConfirmation/OrderConfirmation.jsx';
+import MyAccount from './Pages/MyAccount/MyAccount.jsx';
 
 function MainContent() {
   const location = useLocation();
@@ -65,6 +66,7 @@ function MainContent() {
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/order-confirmation/:id" element={<OrderConfirmation />} />
+        <Route path="/my-account" element={<MyAccount />} />
       </Routes>
     </>
   );

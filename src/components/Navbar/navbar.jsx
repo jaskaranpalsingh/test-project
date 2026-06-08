@@ -87,6 +87,13 @@ function Navbar() {
                       <p className="dropdown-email">{userInfo?.email || ""}</p>
                     </div>
                     <div className="dropdown-divider"></div>
+                    <Link
+                      to="/my-account"
+                      className="dropdown-item"
+                      onClick={() => setUserDropdownOpen(false)}
+                    >
+                      My Account
+                    </Link>
                     {userInfo?.isAdmin && (
                       <a
                         href="http://localhost:5174"
