@@ -203,6 +203,7 @@ function Men() {
                 console.log("Men.jsx: Filtered Men DB products:", menDbProducts);
                 const formattedDb = menDbProducts.map(p => ({
                     id: p._id || Math.random().toString(),
+                    _id: p._id,
                     title: p.title || p.name,
                     price: Number(p.price),
                     rating: p.rating || 4.5,

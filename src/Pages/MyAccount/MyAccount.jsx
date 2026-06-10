@@ -6,14 +6,13 @@ import "./MyAccount.css";
 function MyAccount() {
     const navigate = useNavigate();
 
-    // Store userInfo in stable state — avoids infinite loop from new object on every render
+    // Retrieve authentication info in stable state
     const [userInfo, setUserInfo] = useState(() => {
         const stored = localStorage.getItem("userInfo");
         return stored ? JSON.parse(stored) : null;
     });
 
-    // Stable token string for useEffect deps
-    const token = userInfo?.token || "";
+    const token = userInfo?.token;
 
     // Tab state: 'profile' or 'orders'
     const [activeTab, setActiveTab] = useState("profile");
@@ -45,15 +44,18 @@ function MyAccount() {
         }
     }, [userInfo, navigate]);
 
-    // Fetch user profile info — depends on stable token string, not userInfo object
+    // Fetch user profile info
     useEffect(() => {
         if (!token) return;
 
         const fetchProfile = async () => {
             try {
-                const res = await API.get("/auth/profile", {
-                    headers: { Authorization: `Bearer ${token}` },
-                });
+                const config = {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                };
+                const res = await API.get("/auth/profile", config);
                 setProfile(res.data);
                 setFormData({
                     name: res.data.name,
@@ -72,15 +74,18 @@ function MyAccount() {
         fetchProfile();
     }, [token]);
 
-    // Fetch orders history — depends on stable token string, not userInfo object
+    // Fetch orders history
     useEffect(() => {
         if (!token) return;
 
         const fetchOrders = async () => {
             try {
-                const res = await API.get("/orders/myorders", {
-                    headers: { Authorization: `Bearer ${token}` },
-                });
+                const config = {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                };
+                const res = await API.get("/orders/myorders", config);
                 setOrders(res.data);
             } catch (err) {
                 console.error("Fetch orders error:", err);
@@ -112,6 +117,12 @@ function MyAccount() {
         }
 
         try {
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            };
+
             const payload = {
                 name: formData.name,
                 email: formData.email,
@@ -121,16 +132,14 @@ function MyAccount() {
                 payload.password = formData.password;
             }
 
-            const res = await API.put("/auth/profile", payload, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
+            const res = await API.put("/auth/profile", payload, config);
 
             // Update local states
             setProfile(res.data);
             setIsEditing(false);
             setSuccessProfile("Profile updated successfully!");
 
-            // Update userInfo state + localStorage atomically to prevent stale reads
+            // Update user info in localStorage (including fresh token if changed) and state
             const updatedUserInfo = {
                 ...userInfo,
                 name: res.data.name,
@@ -169,13 +178,13 @@ function MyAccount() {
                     <p className="user-sidebar-email">{profile?.email || userInfo.email}</p>
 
                     <div className="sidebar-menu">
-                        <button 
+                        <button
                             className={`sidebar-menu-btn ${activeTab === "profile" ? "active" : ""}`}
                             onClick={() => setActiveTab("profile")}
                         >
                             👤 My Profile
                         </button>
-                        <button 
+                        <button
                             className={`sidebar-menu-btn ${activeTab === "orders" ? "active" : ""}`}
                             onClick={() => setActiveTab("orders")}
                         >
@@ -207,7 +216,7 @@ function MyAccount() {
                             ) : (
                                 <>
                                     {successProfile && <div className="alert-box alert-success">{successProfile}</div>}
-                                    
+
                                     {!isEditing ? (
                                         <div className="profile-details-grid">
                                             <div className="detail-item">
@@ -225,12 +234,12 @@ function MyAccount() {
                                             <div className="detail-item">
                                                 <span className="detail-label">Member Since</span>
                                                 <span className="detail-val">
-                                                    {profile?.createdAt 
+                                                    {profile?.createdAt
                                                         ? new Date(profile.createdAt).toLocaleDateString("en-US", {
                                                             year: "numeric",
                                                             month: "long",
                                                             day: "numeric"
-                                                          })
+                                                        })
                                                         : "N/A"
                                                     }
                                                 </span>
@@ -239,38 +248,38 @@ function MyAccount() {
                                     ) : (
                                         <form onSubmit={handleProfileUpdate} className="profile-edit-form">
                                             {errorProfile && <div className="alert-box alert-error">{errorProfile}</div>}
-                                            
+
                                             <div className="form-input-group">
-                                                <input 
-                                                    type="text" 
-                                                    name="name" 
+                                                <input
+                                                    type="text"
+                                                    name="name"
                                                     id="name"
                                                     value={formData.name}
                                                     onChange={handleInputChange}
                                                     placeholder=" "
-                                                    required 
+                                                    required
                                                 />
                                                 <label htmlFor="name">Full Name</label>
                                             </div>
 
                                             <div className="form-input-group">
-                                                <input 
-                                                    type="email" 
-                                                    name="email" 
+                                                <input
+                                                    type="email"
+                                                    name="email"
                                                     id="email"
                                                     value={formData.email}
                                                     onChange={handleInputChange}
                                                     placeholder=" "
-                                                    required 
+                                                    required
                                                 />
                                                 <label htmlFor="email">Email Address</label>
                                             </div>
 
                                             <div className="form-row">
                                                 <div className="form-input-group">
-                                                    <input 
-                                                        type="password" 
-                                                        name="password" 
+                                                    <input
+                                                        type="password"
+                                                        name="password"
                                                         id="password"
                                                         value={formData.password}
                                                         onChange={handleInputChange}
@@ -280,9 +289,9 @@ function MyAccount() {
                                                 </div>
 
                                                 <div className="form-input-group">
-                                                    <input 
-                                                        type="password" 
-                                                        name="confirmPassword" 
+                                                    <input
+                                                        type="password"
+                                                        name="confirmPassword"
                                                         id="confirmPassword"
                                                         value={formData.confirmPassword}
                                                         onChange={handleInputChange}
@@ -296,8 +305,8 @@ function MyAccount() {
                                                 <button type="submit" className="save-profile-btn">
                                                     Save Changes
                                                 </button>
-                                                <button 
-                                                    type="button" 
+                                                <button
+                                                    type="button"
                                                     className="cancel-edit-btn"
                                                     onClick={() => {
                                                         setIsEditing(false);
@@ -387,8 +396,8 @@ function MyAccount() {
                                             </div>
 
                                             <div className="order-card-actions">
-                                                <button 
-                                                    className="view-invoice-btn" 
+                                                <button
+                                                    className="view-invoice-btn"
                                                     onClick={() => navigate(`/order-confirmation/${order._id}`)}
                                                 >
                                                     View Invoice Details

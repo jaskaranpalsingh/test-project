@@ -145,6 +145,7 @@ function Jackets() {
                 );
                 const formattedDb = jacketDbProducts.map(p => ({
                     id: p._id || Math.random().toString(),
+                    _id: p._id,
                     title: p.title || p.name,
                     price: Number(p.price),
                     oldPrice: p.oldPrice ? Number(p.oldPrice) : null,

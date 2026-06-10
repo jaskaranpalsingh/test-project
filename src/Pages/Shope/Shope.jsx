@@ -244,6 +244,7 @@ function Shope() {
                 const res = await API.get('/products');
                 const formattedDb = res.data.map(p => ({
                     id: p._id || Math.random().toString(),
+                    _id: p._id,
                     title: p.title || p.name,
                     price: Number(p.price),
                     rating: p.rating || 4.5,
