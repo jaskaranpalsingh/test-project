@@ -14,7 +14,6 @@ function Navbar() {
     ? JSON.parse(localStorage.getItem("userInfo"))
     : null;
 
-  // ✅ Safely get first name — handles undefined name
   const firstName = userInfo?.name?.split(" ")[0]
     || userInfo?.userName?.split(" ")[0]
     || "Account";
@@ -45,16 +44,41 @@ function Navbar() {
             <li className="list-btn">
               <button onClick={() => setIsOpen(!isOpen)}>
                 Categories
-                <ChevronDownIcon className="dropdown-icon" />
+                <ChevronDownIcon className={`dropdown-icon ${isOpen ? "dropdown-icon-open" : ""}`} />
               </button>
 
               {isOpen && (
                 <div className="custom-dropdown">
+                  <div className="dropdown-category-header">Browse Categories</div>
                   <ul className="sub-menu">
-                    <Link to="/dresses" className="dropdown-element" onClick={() => setIsOpen(false)}>Dresses</Link>
-                    <Link to="/Jackets" className="dropdown-element" onClick={() => setIsOpen(false)}>Jackets</Link>
-                    <Link to="/Tshirts" className="dropdown-element" onClick={() => setIsOpen(false)}>Tshirts</Link>
+                    <Link to="/dresses" className="dropdown-element" onClick={() => setIsOpen(false)}>
+                      <span className="dropdown-icon-box" style={{ background: "#fce7f3", color: "#be185d" }}>👗</span>
+                      <span className="dropdown-element-text">
+                        <span className="dropdown-element-label">Dresses</span>
+                        <span className="dropdown-element-sub">Casual, formal &amp; more</span>
+                      </span>
+                      <span className="dropdown-element-arrow">›</span>
+                    </Link>
+                    <Link to="/Jackets" className="dropdown-element" onClick={() => setIsOpen(false)}>
+                      <span className="dropdown-icon-box" style={{ background: "#dbeafe", color: "#1d4ed8" }}>🧥</span>
+                      <span className="dropdown-element-text">
+                        <span className="dropdown-element-label">Jackets</span>
+                        <span className="dropdown-element-sub">Coats, hoodies &amp; outerwear</span>
+                      </span>
+                      <span className="dropdown-element-arrow">›</span>
+                    </Link>
+                    <Link to="/Tshirts" className="dropdown-element" onClick={() => setIsOpen(false)}>
+                      <span className="dropdown-icon-box" style={{ background: "#fef3c7", color: "#b45309" }}>👕</span>
+                      <span className="dropdown-element-text">
+                        <span className="dropdown-element-label">T-shirts</span>
+                        <span className="dropdown-element-sub">Graphics, basics &amp; more</span>
+                      </span>
+                      <span className="dropdown-element-arrow">›</span>
+                    </Link>
                   </ul>
+                  <Link to="/shope" className="dropdown-footer-link" onClick={() => setIsOpen(false)}>
+                    View all categories <span style={{ marginLeft: "4px" }}>→</span>
+                  </Link>
                 </div>
               )}
             </li>
@@ -75,14 +99,12 @@ function Navbar() {
                   onClick={() => setUserDropdownOpen(!userDropdownOpen)}
                 >
                   <UserIcon className="user-icon" />
-                  {/* ✅ Fixed: was crashing when name was undefined */}
                   <span className="user-firstname">{firstName}</span>
                 </button>
 
                 {userDropdownOpen && (
                   <div className="user-profile-dropdown">
                     <div className="user-info-header">
-                      {/* ✅ Safe fallbacks for name and email */}
                       <p className="dropdown-username">{userInfo?.name || "User"}</p>
                       <p className="dropdown-email">{userInfo?.email || ""}</p>
                     </div>
