@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import API from '../../services/api';
+import { useWishlist } from '../../context/WishlistContext';
 import './Dresses.css';
 
 // Import images
@@ -53,6 +54,7 @@ const dressProducts = [
 ];
 
 function Dresses() {
+    const { toggleWishlist, isInWishlist } = useWishlist();
     const [dbProducts, setDbProducts] = useState([]);
     const [price, setPrice] = useState(100);
 
@@ -291,7 +293,13 @@ function Dresses() {
                                     </Link>
                                     {product.badge && <span className="product-badge">{product.badge}</span>}
                                     <div className="product-actions">
-                                        <button className="action-btn">♡</button>
+                                        <button 
+                                            className="action-btn" 
+                                            onClick={() => toggleWishlist(product)}
+                                            style={{ color: isInWishlist(product._id || product.id) ? '#f43f5e' : '' }}
+                                        >
+                                            {isInWishlist(product._id || product.id) ? '♥' : '♡'}
+                                        </button>
                                         <button className="action-btn">👁</button>
                                         <button className="action-btn">⛶</button>
                                     </div>

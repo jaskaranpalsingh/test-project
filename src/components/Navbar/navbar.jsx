@@ -1,14 +1,16 @@
 import { useState } from "react";
 import "./navbar.css";
 import { ChevronDownIcon, ShoppingCartIcon } from "@heroicons/react/24/solid";
-import { UserIcon } from "@heroicons/react/24/outline";
+import { UserIcon, HeartIcon } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
+import { useWishlist } from "../../context/WishlistContext";
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const { totalItems, setIsCartOpen } = useCart();
+  const { wishlistItems } = useWishlist();
 
   const userInfo = localStorage.getItem("userInfo")
     ? JSON.parse(localStorage.getItem("userInfo"))
@@ -83,6 +85,12 @@ function Navbar() {
               )}
             </li>
           </ul>
+
+          {/* Wishlist Icon */}
+          <Link to="/wishlist" className="navbar-wishlist">
+            <HeartIcon className="wishlist-icon" />
+            {wishlistItems.length > 0 && <span className="wishlist-badge">{wishlistItems.length}</span>}
+          </Link>
 
           {/* Cart Icon */}
           <div className="navbar-cart" onClick={() => setIsCartOpen(true)}>

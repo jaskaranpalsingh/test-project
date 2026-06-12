@@ -8,6 +8,7 @@ import {
 } from "react-router-dom";
 
 import { CartProvider } from './context/CartContext.jsx';
+import { WishlistProvider } from './context/WishlistContext.jsx';
 
 import Navbar from './components/Navbar/navbar.jsx';
 import Hero from './components/Hero/Hero.jsx';
@@ -28,6 +29,7 @@ import ResetPassword from './Pages/ResetPassword/ResetPassword.jsx';
 import Checkout from './Pages/Checkout/Checkout.jsx';
 import OrderConfirmation from './Pages/OrderConfirmation/OrderConfirmation.jsx';
 import MyAccount from './Pages/MyAccount/MyAccount.jsx';
+import Wishlist from './Pages/Wishlist/Wishlist.jsx';
 
 function MainContent() {
   const location = useLocation();
@@ -67,6 +69,7 @@ function MainContent() {
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/order-confirmation/:id" element={<OrderConfirmation />} />
         <Route path="/my-account" element={<MyAccount />} />
+        <Route path="/wishlist" element={<Wishlist />} />
       </Routes>
     </>
   );
@@ -75,9 +78,11 @@ function MainContent() {
 function App() {
   return (
     <CartProvider>
-      <BrowserRouter>
-        <MainContent />
-      </BrowserRouter>
+      <WishlistProvider>
+        <BrowserRouter>
+          <MainContent />
+        </BrowserRouter>
+      </WishlistProvider>
     </CartProvider>
   );
 }

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './Product.css';
 import { useCart } from '../../context/CartContext';
+import { useWishlist } from '../../context/WishlistContext';
 
 const API_BASE = 'http://localhost:5000/api';
 
@@ -9,6 +10,7 @@ function Product() {
     const location = useLocation();
     const navigate = useNavigate();
     const { addToCart } = useCart();
+    const { toggleWishlist, isInWishlist } = useWishlist();
 
     const productData = location.state?.product;
 
@@ -345,7 +347,13 @@ function Product() {
 
                         {/* Actions */}
                         <div className="product-actions-links">
-                            <button className="text-action-btn">♡ Add to wishlist</button>
+                            <button className="text-action-btn" onClick={() => toggleWishlist(productData)}>
+                                {isInWishlist(productData._id || productData.id) ? (
+                                    <span style={{ color: '#f43f5e', fontWeight: 'bold' }}>♥ In wishlist</span>
+                                ) : (
+                                    <span>♡ Add to wishlist</span>
+                                )}
+                            </button>
                             <button className="text-action-btn">⇋ Compare</button>
                         </div>
 

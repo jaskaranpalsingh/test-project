@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import API from '../../services/api';
+import { useWishlist } from '../../context/WishlistContext';
 import './Shope.css';
 
 // Import product images
@@ -229,6 +230,7 @@ const brandsList = [
 ];
 
 function Shope() {
+    const { toggleWishlist, isInWishlist } = useWishlist();
     const [dbProducts, setDbProducts] = useState([]);
     const [selectedCategories, setSelectedCategories] = useState([]);
     const [priceLimit, setPriceLimit] = useState(150);
@@ -558,7 +560,13 @@ function Shope() {
                                         </Link>
                                         {product.badge && <span className="product-badge">{product.badge}</span>}
                                         <div className="product-actions">
-                                            <button className="action-btn">♡</button>
+                                            <button 
+                                                className="action-btn" 
+                                                onClick={() => toggleWishlist(product)}
+                                                style={{ color: isInWishlist(product._id || product.id) ? '#f43f5e' : '' }}
+                                            >
+                                                {isInWishlist(product._id || product.id) ? '♥' : '♡'}
+                                            </button>
                                             <button className="action-btn">👁</button>
                                         </div>
                                         <button className="select-options-btn">SELECT OPTIONS</button>
