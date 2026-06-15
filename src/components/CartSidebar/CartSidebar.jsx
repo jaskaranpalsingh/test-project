@@ -89,7 +89,7 @@ function CartSidebar() {
                                 className="view-cart-btn"
                                 onClick={() => {
                                     setIsCartOpen(false);
-                                    navigate("/checkout");
+                                    navigate("/cart");
                                 }}
                             >
                                 VIEW CART

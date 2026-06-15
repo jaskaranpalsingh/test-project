@@ -30,6 +30,7 @@ import Checkout from './Pages/Checkout/Checkout.jsx';
 import OrderConfirmation from './Pages/OrderConfirmation/OrderConfirmation.jsx';
 import MyAccount from './Pages/MyAccount/MyAccount.jsx';
 import Wishlist from './Pages/Wishlist/Wishlist.jsx';
+import Cart from './Pages/Cart/Cart.jsx';
 
 function MainContent() {
   const location = useLocation();
@@ -70,6 +71,7 @@ function MainContent() {
         <Route path="/order-confirmation/:id" element={<OrderConfirmation />} />
         <Route path="/my-account" element={<MyAccount />} />
         <Route path="/wishlist" element={<Wishlist />} />
+        <Route path="/cart" element={<Cart />} />
       </Routes>
     </>
   );
@@ -77,13 +79,13 @@ function MainContent() {
 
 function App() {
   return (
-    <CartProvider>
-      <WishlistProvider>
+    <WishlistProvider>
+      <CartProvider>
         <BrowserRouter>
           <MainContent />
         </BrowserRouter>
-      </WishlistProvider>
-    </CartProvider>
+      </CartProvider>
+    </WishlistProvider>
   );
 }
 

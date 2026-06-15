@@ -428,7 +428,16 @@ const Women = () => {
                                     checked={selectedCategories.includes(item)}
                                     onChange={() => handleCategoryChange(item)}
                                 />
-                                <label htmlFor={`cat-${item}`} className="filter-name">{item}</label>
+                                <label 
+                                    htmlFor={`cat-${item}`} 
+                                    className="filter-name"
+                                    style={{
+                                        fontWeight: selectedCategories.includes(item) ? '600' : '400',
+                                        color: selectedCategories.includes(item) ? '#111827' : ''
+                                    }}
+                                >
+                                    {item}
+                                </label>
                             </div>
                             {(item === "Men" || item === "Women") && (
                                 <span className="plus-icon">+</span>
@@ -440,20 +449,20 @@ const Women = () => {
 
                     {/* Price Filter */}
                     <h3 className="sidebar-title">Filter by price</h3>
-                    <div className="price-range-slider" style={{ marginBottom: '15px' }}>
+                    <div className="price-range-slider">
                         <input
                             type="range"
-                            min="0"
+                            min="10"
                             max={maxPricePossible}
                             value={priceLimit}
                             className="range-slider"
                             onChange={(e) => setPriceLimit(Number(e.target.value))}
                         />
                     </div>
-                    <div className="price-inputs" style={{ marginBottom: '15px' }}>
-                        <input type="text" value="10" readOnly className="price-input" style={{ width: '80px' }} />
+                    <div className="price-inputs">
+                        <input type="text" value="10" readOnly className="price-input" />
                         <span className="price-separator">-</span>
-                        <input type="text" value={priceLimit} readOnly className="price-input" style={{ width: '80px' }} />
+                        <input type="text" value={priceLimit} readOnly className="price-input" />
                     </div>
                     
                     <div className="price-footer">

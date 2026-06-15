@@ -211,7 +211,34 @@ body {
     transition: 0.3s;
 }
 
+.action-btn:hover {
+    background: #111;
+    color: #fff;
+}
 
+/* BUTTON */
+
+.select-options-btn {
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 85%;
+    padding: 11px;
+    border: none;
+    background: #111;
+    color: #fff;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    opacity: 0;
+    transition: 0.3s;
+}
+
+.product-card:hover .select-options-btn {
+    opacity: 1;
+}
 
 /* INFO */
 

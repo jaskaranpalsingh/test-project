@@ -11,6 +11,8 @@ function Login() {
 
   const handleLogout = () => {
     localStorage.removeItem("userInfo");
+    localStorage.removeItem("wishlist");
+    localStorage.removeItem("wishlist_guest");
     window.location.reload();
   };
 
