@@ -65,15 +65,84 @@ function OrderConfirmation() {
         );
     }
 
+    const orderStatus = order.status || "Processing";
+    const isCancelled = orderStatus === "Cancelled";
+
+    const steps = isCancelled
+        ? [
+              { label: "Order Placed", desc: "Your order was successfully placed.", completed: true, active: false },
+              { label: "Cancelled", desc: "Your order has been cancelled.", completed: true, active: true, error: true }
+          ]
+        : [
+              {
+                  label: "Order Placed",
+                  desc: "We received your order.",
+                  completed: true,
+                  active: orderStatus === "Pending"
+              },
+              {
+                  label: "Processing",
+                  desc: "Preparing your items.",
+                  completed: ["Processing", "Shipped", "Delivered"].includes(orderStatus),
+                  active: orderStatus === "Processing"
+              },
+              {
+                  label: "Shipped",
+                  desc: "Out for delivery.",
+                  completed: ["Shipped", "Delivered"].includes(orderStatus),
+                  active: orderStatus === "Shipped"
+              },
+              {
+                  label: "Delivered",
+                  desc: "Enjoy your purchase!",
+                  completed: orderStatus === "Delivered",
+                  active: orderStatus === "Delivered"
+              }
+          ];
+
     return (
         <div className="confirmation-page">
             <div className="confirmation-container">
                 <div className="confirmation-header-card">
-                    <div className="success-icon-badge">✓</div>
-                    <h1>Thank You For Your Order!</h1>
-                    <p className="order-subtitle">Your order is being processed and will be shipped soon.</p>
+                    <div className={isCancelled ? "success-icon-badge cancelled-badge" : "success-icon-badge"}>
+                        {isCancelled ? "✕" : "✓"}
+                    </div>
+                    <h1>{isCancelled ? "Order Cancelled" : "Thank You For Your Order!"}</h1>
+                    <p className="order-subtitle">
+                        {isCancelled 
+                            ? "This order was cancelled. Contact support if you have questions." 
+                            : "Your order is being processed and will be shipped soon."}
+                    </p>
                     <div className="order-id-bubble">
                         <span>Order ID:</span> <strong>#ORD-{order._id.toString().slice(-6).toUpperCase()}</strong>
+                    </div>
+                </div>
+
+                {/* Tracking Timeline Card */}
+                <div className="confirmation-card timeline-card">
+                    <h3>Order Status & Tracking</h3>
+                    <div className="tracking-timeline">
+                        {steps.map((step, idx) => (
+                            <div 
+                                key={idx} 
+                                className={`timeline-step 
+                                    ${step.completed ? 'completed' : ''} 
+                                    ${step.active ? 'active' : ''} 
+                                    ${step.error ? 'error' : ''}
+                                `}
+                            >
+                                <div className="step-marker-container">
+                                    <div className="step-marker">
+                                        {step.error ? '✕' : (step.completed && !step.active ? '✓' : idx + 1)}
+                                    </div>
+                                    {idx < steps.length - 1 && <div className="step-connector"></div>}
+                                </div>
+                                <div className="step-content">
+                                    <h4 className="step-label">{step.label}</h4>
+                                    <p className="step-desc">{step.desc}</p>
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 </div>
 

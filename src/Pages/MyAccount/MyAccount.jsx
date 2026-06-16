@@ -374,6 +374,38 @@ function MyAccount() {
                                                 </div>
                                             </div>
 
+                                            {/* Mini Status Progress Bar */}
+                                            {order.status === "Cancelled" ? (
+                                                <div className="order-progress-bar-container cancelled">
+                                                    <div className="progress-step active error">
+                                                        <span className="progress-dot"></span>
+                                                        <span className="progress-label">Cancelled</span>
+                                                    </div>
+                                                </div>
+                                            ) : (
+                                                <div className="order-progress-bar-container">
+                                                    <div className="progress-step active">
+                                                        <span className="progress-dot"></span>
+                                                        <span className="progress-label">Placed</span>
+                                                    </div>
+                                                    <div className={`progress-line ${["Processing", "Shipped", "Delivered"].includes(order.status || "Pending") ? "active" : ""}`}></div>
+                                                    <div className={`progress-step ${["Processing", "Shipped", "Delivered"].includes(order.status || "Pending") ? "active" : ""}`}>
+                                                        <span className="progress-dot"></span>
+                                                        <span className="progress-label">Processing</span>
+                                                    </div>
+                                                    <div className={`progress-line ${["Shipped", "Delivered"].includes(order.status || "Pending") ? "active" : ""}`}></div>
+                                                    <div className={`progress-step ${["Shipped", "Delivered"].includes(order.status || "Pending") ? "active" : ""}`}>
+                                                        <span className="progress-dot"></span>
+                                                        <span className="progress-label">Shipped</span>
+                                                    </div>
+                                                    <div className={`progress-line ${order.status === "Delivered" ? "active" : ""}`}></div>
+                                                    <div className={`progress-step ${order.status === "Delivered" ? "active" : ""}`}>
+                                                        <span className="progress-dot"></span>
+                                                        <span className="progress-label">Delivered</span>
+                                                    </div>
+                                                </div>
+                                            )}
+
                                             <div className="order-card-items">
                                                 {order.orderItems?.map((item, idx) => (
                                                     <div className="order-card-item-row" key={idx}>

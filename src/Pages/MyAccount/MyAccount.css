@@ -595,3 +595,91 @@
         justify-content: space-between;
     }
 }
+
+/* ===== MINI PROGRESS BAR IN ACCOUNT ORDERS ===== */
+.order-progress-bar-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    background: #fafafa;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.order-progress-bar-container.cancelled {
+    justify-content: center;
+}
+
+.progress-step {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+}
+
+.progress-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #cbd5e1;
+    display: inline-block;
+    transition: all 0.3s ease;
+}
+
+.progress-label {
+    font-size: 11px;
+    font-weight: 500;
+    color: #64748b;
+    transition: all 0.3s ease;
+}
+
+.progress-line {
+    flex-grow: 1;
+    height: 2px;
+    background: #cbd5e1;
+    margin: 0 12px;
+    transition: all 0.3s ease;
+}
+
+/* Active State styling */
+.progress-step.active .progress-dot {
+    background: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.progress-step.active .progress-label {
+    color: #1e293b;
+    font-weight: 600;
+}
+
+.progress-line.active {
+    background: #2563eb;
+}
+
+/* Error / Cancelled State styling */
+.progress-step.active.error .progress-dot {
+    background: #ef4444;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+}
+
+.progress-step.active.error .progress-label {
+    color: #ef4444;
+    font-weight: 600;
+}
+
+@media(max-width: 600px) {
+    .order-progress-bar-container {
+        padding: 12px 14px;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+    
+    .progress-line {
+        margin: 0 4px;
+        min-width: 10px;
+    }
+    
+    .progress-label {
+        font-size: 10px;
+    }
+}
