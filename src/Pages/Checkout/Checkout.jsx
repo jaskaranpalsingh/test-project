@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
 import API from "../../services/api";
+import CouponInput from "./CouponInput";
 import "./Checkout.css";
 
 const FREE_SHIPPING_THRESHOLD = 500;
@@ -15,7 +16,12 @@ function Checkout() {
         : null;
 
     const shippingPrice = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : 50;
-    const totalPrice = subtotal + shippingPrice;
+    const baseTotal = subtotal + shippingPrice;
+
+    // Coupon state
+    const [appliedCoupon, setAppliedCoupon] = useState(null);
+    const discount   = appliedCoupon ? appliedCoupon.discountAmount : 0;
+    const totalPrice = parseFloat((baseTotal - discount).toFixed(2));
 
     const [formData, setFormData] = useState({
         fullName: userInfo?.name || "",
@@ -67,7 +73,10 @@ function Checkout() {
                 shippingAddress: formData,
                 subtotal,
                 shippingPrice,
+                discount,
                 totalPrice,
+                couponId: appliedCoupon?.couponId || null,
+                couponCode: appliedCoupon?.code || null,
             };
 
             const res = await API.post("/orders", orderData, config);
@@ -234,6 +243,14 @@ function Checkout() {
                         ))}
                     </div>
 
+                    {/* Coupon Input */}
+                    <CouponInput
+                        orderTotal={baseTotal}
+                        appliedCoupon={appliedCoupon}
+                        onCouponApplied={(data) => setAppliedCoupon(data)}
+                        onCouponRemoved={() => setAppliedCoupon(null)}
+                    />
+
                     <div className="order-summary-totals">
                         <div className="summary-row">
                             <span>Subtotal</span>
@@ -243,6 +260,12 @@ function Checkout() {
                             <span>Shipping</span>
                             <span>{shippingPrice === 0 ? "FREE" : `$${shippingPrice.toFixed(2)}`}</span>
                         </div>
+                        {discount > 0 && (
+                            <div className="summary-row" style={{ color: "#16a34a", fontWeight: 600 }}>
+                                <span>🎟 Coupon ({appliedCoupon.code})</span>
+                                <span>−${discount.toFixed(2)}</span>
+                            </div>
+                        )}
                         <div className="summary-divider" />
                         <div className="summary-row total-row">
                             <span>Total</span>
